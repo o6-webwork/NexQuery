@@ -63,7 +63,7 @@ st.session_state["db_file"] = db_file
 ######################################
 
 st.set_page_config(layout="wide")
-st.title("TableAgent")
+st.title("NexQuery")
 st.markdown(
     """
     Upload a CSV, XLSX, or JSON file. The app will ingest the data, build a database, and allow you to ask SQL-based questions.

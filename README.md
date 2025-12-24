@@ -1,6 +1,6 @@
-# TableAgent
+# NexQuery
 
-TableAgent is a Streamlit-based application that ingests CSV, XLSX, or JSON files to build a SQLite database and leverages a local language model (LLM) to generate SQL queries from natural language questions. The generated queries are executed against the database, and the results—as well as a human-readable explanation of the query—are presented to the user. In addition, the app automatically constructs a combined JSON schema for the table (with details from the SQL metadata, sample data, and an optional data dictionary) that helps guide the LLM to generate accurate, case-insensitive SQL queries. The design is extensible to support multiple tables in the future.
+NexQuery is a Streamlit-based application that ingests CSV, XLSX, or JSON files to build a SQLite database and leverages a local language model (LLM) to generate SQL queries from natural language questions. The generated queries are executed against the database, and the results—as well as a human-readable explanation of the query—are presented to the user. In addition, the app automatically constructs a combined JSON schema for the table (with details from the SQL metadata, sample data, and an optional data dictionary) that helps guide the LLM to generate accurate, case-insensitive SQL queries. The design is extensible to support multiple tables in the future.
 
 ## Features
 
@@ -53,21 +53,21 @@ Additional dependencies might be required by your local LLM server.
 
 ### 1. Clone the Repository
 ```sh
-git clone https://github.com/o6-webwork/tableagent.git
-cd tableagent
+git clone https://github.com/o6-webwork/nexquery.git
+cd nexquery
 ```
 
 ### 2. Run with Docker (Recommended)
-To avoid dependency conflicts, you can run TableAgent inside a Docker container.
+To avoid dependency conflicts, you can run NexQuery inside a Docker container.
 
 #### **Building the Docker Image**
 ```sh
-docker build -t tableagent .
+docker build -t nexquery .
 ```
 
 #### **Running the Container**
 ```sh
-docker run --rm -p 8501:8501 tableagent
+docker run --rm -p 8501:8501 nexquery
 ```
 - `--rm` removes the container automatically after it stops, keeping things clean.
 - `-p 8501:8501` maps the container's port to the host, making the Streamlit app accessible at `http://localhost:8501`.

@@ -1,10 +1,10 @@
 services:
-  tableagent:
+  nexquery:
     build:
       context: .
     ports:
       - "8501:8501"
-    container_name: tableagent
+    container_name: nexquery
     environment:
       - LLM_BASE_URL=http://127.0.0.1:8000/v1
       - OPENAI_API_KEY=token-abc123
