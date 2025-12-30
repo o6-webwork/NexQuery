@@ -81,7 +81,7 @@ def error_popup(e):
         st.rerun()
 
 st.sidebar.header("LLM Configuration")
-openapiurl = st.sidebar.text_input("Base URL", "http://127.0.0.1:1234/v1")
+openapiurl = st.sidebar.text_input("Base URL", os.environ.get("LLM_BASE_URL", "http://127.0.0.1:1234/v1"))
 openapitoken = st.sidebar.text_input("API Key", os.environ.get("OPENAI_API_KEY", "token-abc123"))
 st.session_state.openapitoken = openapitoken
 st.session_state.openaiapiurl = openapiurl 
