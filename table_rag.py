@@ -81,7 +81,7 @@ def error_popup(e):
         st.rerun()
 
 st.sidebar.header("LLM Configuration")
-openapiurl = st.sidebar.text_input("Base URL", "http://127.0.0.1:1234/v1")
+openapiurl = st.sidebar.text_input("Base URL", os.environ.get("LLM_BASE_URL", "http://127.0.0.1:1234/v1"))
 openapitoken = st.sidebar.text_input("API Key", os.environ.get("OPENAI_API_KEY", "token-abc123"))
 st.session_state.openapitoken = openapitoken
 st.session_state.openaiapiurl = openapiurl 
@@ -186,7 +186,17 @@ else:
     full_engine = st.session_state["full_engine"]
 
 table_name = st.session_state.get("table_name", "training")
-df.to_sql(table_name, full_engine, if_exists="replace", index=False)
+
+# Convert dict/list columns to JSON strings for SQLite compatibility
+df_to_insert = df.copy()
+for col in df_to_insert.columns:
+    # Check if column contains dict or list objects
+    if df_to_insert[col].dtype == 'object':
+        # Check if any non-null value is a dict or list. This is more robust than checking only the first element.
+        if any(isinstance(v, (dict, list)) for v in df_to_insert[col].dropna()):
+            df_to_insert[col] = df_to_insert[col].apply(lambda x: json.dumps(x) if pd.notna(x) and isinstance(x, (dict, list)) else x)
+
+df_to_insert.to_sql(table_name, full_engine, if_exists="replace", index=False)
 
 if "ro_engine" not in st.session_state:
     ro_engine = create_engine(
