@@ -192,8 +192,8 @@ df_to_insert = df.copy()
 for col in df_to_insert.columns:
     # Check if column contains dict or list objects
     if df_to_insert[col].dtype == 'object':
-        sample_val = df_to_insert[col].dropna().iloc[0] if not df_to_insert[col].dropna().empty else None
-        if sample_val is not None and isinstance(sample_val, (dict, list)):
+        # Check if any non-null value is a dict or list. This is more robust than checking only the first element.
+        if any(isinstance(v, (dict, list)) for v in df_to_insert[col].dropna()):
             df_to_insert[col] = df_to_insert[col].apply(lambda x: json.dumps(x) if pd.notna(x) and isinstance(x, (dict, list)) else x)
 
 df_to_insert.to_sql(table_name, full_engine, if_exists="replace", index=False)
