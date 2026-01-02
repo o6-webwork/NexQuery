@@ -186,7 +186,17 @@ else:
     full_engine = st.session_state["full_engine"]
 
 table_name = st.session_state.get("table_name", "training")
-df.to_sql(table_name, full_engine, if_exists="replace", index=False)
+
+# Convert dict/list columns to JSON strings for SQLite compatibility
+df_to_insert = df.copy()
+for col in df_to_insert.columns:
+    # Check if column contains dict or list objects
+    if df_to_insert[col].dtype == 'object':
+        sample_val = df_to_insert[col].dropna().iloc[0] if not df_to_insert[col].dropna().empty else None
+        if sample_val is not None and isinstance(sample_val, (dict, list)):
+            df_to_insert[col] = df_to_insert[col].apply(lambda x: json.dumps(x) if pd.notna(x) and isinstance(x, (dict, list)) else x)
+
+df_to_insert.to_sql(table_name, full_engine, if_exists="replace", index=False)
 
 if "ro_engine" not in st.session_state:
     ro_engine = create_engine(
